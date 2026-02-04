@@ -1,0 +1,10 @@
+[
+  {
+    "batterijpercentage": 20,
+    "temperatuur": 35,
+    "ijzers": "Dijmend",
+    "thrusterStatus": "on",
+    "lifeSupport": false,
+    "action": "slaapstand"
+  }
+]

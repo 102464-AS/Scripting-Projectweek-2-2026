@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruimtenschip</title>
+    <style>
+        /* styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #f0f0f0;
+            margin: 20px;
+        }
+
+        #status {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        #status h2 {
+            margin: 10px 0;
+        }
+
+        form {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        form label {
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        form select,
+        form input[type="checkbox"] {
+            margin-bottom: 10px;
+        }
+
+        form input[type="submit"] {
+            margin-top: 15px;
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        form input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- status div -->
+    <div id="status">
+        <h2 id="batterijpercentage"></h2>
+        <h2 id="temperatuur"></h2>
+        <h2 id="ijzers"></h2>
+    </div> 
+
+
+    <!-- action form -->
+    <form action="/action" method="POST">
+      <label for="actie">Choose one:</label>
+
+      <select name="actie" id="actie" required>
+        <option value="">-- select --</option>
+        <option value="beweegVoruit">Beweeg vooruit</option>
+        <option value="draaiNaarLinks">Draai naar links</option>
+        <option value="slaapstand">Slaapstand</option>
+      </select>
+
+      <label for="sensor1">Thruster Status</label>
+      <input type="checkbox" id="checkboxSensor1" name="sensor1">
+
+      <label for="sensorx2">Life Support</label>
+      <input type="checkbox" id="checkboxSensor2" name="sensor2"><br>
+
+      <input type="submit" value="Send">
+    </form>
+
+<script>
+// functie om alle data te fetchen en updaten met html
+async function getStatus() {
+    // fetch de data van de server
+    const response = await fetch("/status");
+    const data = await response.json();
+  
+    // split array naar variabelen
+    const action = data[0]['action'];
+    const batterij = data[0]['batterijpercentage'];
+    const ijzers = data[0]['ijzers'];
+    const lifeSupport = data[0]['lifeSupport'];
+    const temperatuur = data[0]['temperatuur'];
+    const thruster = data[0]['thrusterStatus'];
+    
+    // zet html elementen naar data van de server
+    document.getElementById("batterijpercentage").innerHTML = "Batterij: " + batterij + "%";
+    document.getElementById("temperatuur").innerHTML = "Temperatuur: " + temperatuur + "°C";
+    document.getElementById("ijzers").innerHTML = "Ijzers: " + ijzers;
+    document.getElementById("checkboxSensor1").checked = (thruster == "on");
+    document.getElementById("checkboxSensor2").checked = (lifeSupport == "on");
+    document.getElementById("actie"). value = action;
+}
+
+getStatus(); 
+</script>
+</body>
+</html>
